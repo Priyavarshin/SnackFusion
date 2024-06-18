@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="cart.css">
+</head>
+<body>
+    <div class="menu-bar">
+        <h1 class="logo">SnackFusion</h1>
+        <ul>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="">About</a></li>
+            <li><a href="./chipsitem.html">Products</a></li>
+            <li><a href="">Login</a></li>
+            <li><a href="">Contact</a></li>
+        </ul>
+    </div>
+    <div class="cart-container">
+        <h2>Your Cart</h2>
+        <ul id="cart-items"></ul>
+        <center>
+        <button id="checkout">Checkout</button></center>
+    </div>
+
+    <!-- JavaScript to Display Cart Items -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let cart = localStorage.getItem('cart');
+            if (cart) {
+                cart = JSON.parse(cart);
+                const cartItemsContainer = document.getElementById('cart-items');
+                cart.forEach((product, index) => { // Added index parameter
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <img src="${product.image}" alt="${product.name}" style="width: 100px; height: auto;">
+                        <div>
+                            <h4>${product.name}</h4>
+                            <p>Rs ${product.price}</p>
+                        </div>
+                        <div>
+                            <button class="buy-now">Buy Now</button>
+                            <button class="remove-item" data-index="${index}">Remove</button> <!-- Remove button -->
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(listItem);
+                });
+
+                // Add event listener to remove buttons
+                const removeButtons = document.querySelectorAll('.remove-item');
+                removeButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const indexToRemove = parseInt(this.getAttribute('data-index'));
+                        cart.splice(indexToRemove, 1); // Remove item from cart array
+                        localStorage.setItem('cart', JSON.stringify(cart)); // Update localStorage
+                        location.reload(); // Reload the page to reflect changes
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
